@@ -43,6 +43,8 @@ class NeuralNetwork:
             # layer_inputs gets replaced by results of this layer so that next layer can use them as inputs
             layer_inputs = layer_results
 
+            # Should maybe store results of each layer in perceptron since will be needed for backpropagation later
+
         print(layer_inputs)
         # layer_inputs now how was results of the last layer of the network which is the predictions
         # largest value should correspond to the index of the most likely output
