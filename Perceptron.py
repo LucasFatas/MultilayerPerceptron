@@ -6,6 +6,7 @@ class Perceptron:
         self.weights = weights
         self.bias = bias
 
+    # Incorrect NEEDS activation function
     def calculate_output(self, input):
         return np.dot(input, self.weights) + self.bias
 

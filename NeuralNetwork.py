@@ -5,14 +5,18 @@ from Perceptron import Perceptron
 
 class NeuralNetwork:
 
+    # size should be an array, first value is number of inputs, last value is number of outputs and numbers in between
+    # are the number of perceptrons in hidden layers
     def __init__(self, size):
 
         self.size = size
 
         self.network = []
 
+        # creates every layer
         for i in range(1, len(size)):
             layer = []
+            # creates every perceptron in layer
             for n in range(size[i]):
                 # Random number for weights from 0 to 1 for now and bias of 0
                 # WILL NEED TO BE CHANGED
@@ -39,6 +43,7 @@ class NeuralNetwork:
             # layer_inputs gets replaced by results of this layer so that next layer can use them as inputs
             layer_inputs = layer_results
 
+        print(layer_inputs)
         # layer_inputs now how was results of the last layer of the network which is the predictions
         # largest value should correspond to the index of the most likely output
         prediction = layer_inputs.index(max(layer_inputs))
