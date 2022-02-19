@@ -1,4 +1,4 @@
-
+import numpy as np
 
 class Perceptron:
 
@@ -7,5 +7,8 @@ class Perceptron:
         self.bias = bias
 
     def calculate_output(self, input):
-        return input * self.weight + bias
+        return np.dot(input, self.weights) + self.bias
 
+    def toString(self):
+        print("Weights: " + str(self.weights))
+        print("Bias: " + str(self.bias))

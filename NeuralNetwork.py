@@ -1,5 +1,7 @@
 import numpy as np
 
+from Perceptron import Perceptron
+
 
 class NeuralNetwork:
 
@@ -9,13 +11,21 @@ class NeuralNetwork:
 
         self.network = []
 
-        for i in range(len(size)):
+        for i in range(1, len(size)):
             layer = []
-            for n in range(len(size[i])):
+            for n in range(size[i]):
                 # Random number for weights from 0 to 1 for now and bias of 0
                 # WILL NEED TO BE CHANGED
-                layer.append(Perceptron(np.random.radn(size[i, n], 1), 0))
+                layer.append(Perceptron(np.random.randn(size[i - 1]), 0))
             self.network.append(layer)
+
+    def toString(self):
+        i = 0
+        for layer in self.network:
+            i += 1
+            print("Layer " + str(i) + ": ")
+            for perceptron in layer:
+                perceptron.toString()
 
     def feedforward(self, inputs):
 
@@ -24,7 +34,7 @@ class NeuralNetwork:
             # results of current layer
             layer_results = []
             for perceptron in layer:
-                layer_results.append(perceptron.calculate(layer_inputs))
+                layer_results.append(perceptron.calculate_output(layer_inputs))
 
             # layer_inputs gets replaced by results of this layer so that next layer can use them as inputs
             layer_inputs = layer_results
