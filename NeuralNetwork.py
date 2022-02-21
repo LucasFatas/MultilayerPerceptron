@@ -55,5 +55,12 @@ class NeuralNetwork:
     def backpropagation(self):
         pass
 
-    def activation_function(self):
-        pass
+    # Initially, we can use the squared error function
+    # it could be changed later on
+    def calculateError(self, prediction, target):
+        error = pow((target-prediction), 2)
+        return error
+
+    def activation_function(self, x):
+        result = 1 / (1 + pow(np.exp, -x))
+        return result
