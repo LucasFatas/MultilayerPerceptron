@@ -3,6 +3,10 @@ import numpy as np
 from Perceptron import Perceptron
 
 
+def calculate_error(prediction, actual):
+    return np.square(np.subtract(actual, prediction)).mean()
+
+
 class NeuralNetwork:
 
     # size should be an array, first value is number of inputs, last value is number of outputs and numbers in between
@@ -52,11 +56,9 @@ class NeuralNetwork:
 
         return prediction
 
-    def backpropagation(self):
+    def backpropagation(self, features, classes, alpha ):
         pass
 
     # Initially, we can use the squared error function
     # it could be changed later on
-    def calculateError(self, prediction, target):
-        error = pow((target-prediction), 2)
-        return error
+
