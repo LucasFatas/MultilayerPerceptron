@@ -6,12 +6,11 @@ class Perceptron:
         self.weights = weights
         self.bias = bias
 
-    def activation_function(self, x):
-        result = 1 / (1 + pow(np.exp, -x))
-        return result
+    def activation_function(self, z):
+        return 1/(1 + np.exp(-z))
 
     def calculate_output(self, input):
-        return self.activation_function(self, np.dot(input, self.weights) + self.bias)
+        return self.activation_function(np.dot(input, self.weights) + self.bias)
 
     def toString(self):
         print("Weights: " + str(self.weights))
