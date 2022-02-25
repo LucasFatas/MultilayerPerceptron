@@ -55,7 +55,11 @@ class NeuralNetwork:
             layer_results = []
             for perceptron in layer:
                 layer_results.append(perceptron.calculate_output(layer_inputs))
-
+            # normalizes outputs
+            layer_results = layer_results / np.sum(layer_results)
+            print(layer_results)
+            for index, perceptron in enumerate(layer):
+                perceptron.output = layer_results[index]
             # layer_inputs gets replaced by results of this layer so that next layer can use them as inputs
             layer_inputs = layer_results
 
@@ -64,7 +68,7 @@ class NeuralNetwork:
 
         # layer_inputs now how was results of the last layer of the network which is the predictions
         # the largest value should correspond to the index of the most likely output
-        prediction = layer_inputs.index(max(layer_inputs))
+        prediction = list(layer_inputs).index(max(layer_inputs)) + 1
 
         return prediction
 
@@ -90,7 +94,6 @@ class NeuralNetwork:
                 else:
                     next_layer_weights = list(map(lambda x: x.weights[l_index], self.network[l_index+1]))
                     derivative = sigmoid_derivative(p.z) * np.dot(next_layer_weights, next_layer_derivatives)
-
                 p.weights = p.weights + alpha * derivative * np.array(previous_layer_results)
                 p.bias = p.bias + alpha * derivative
                 layer_derivatives[p_index] = derivative
@@ -100,12 +103,13 @@ class NeuralNetwork:
     def train(self, features, classes, alpha):
         predictions = []
         sum_error = 0
-        for i in range(len(features)):
+        for i in range(150):
+            print(i)
             pred = self.feedforward(features[i])
             predictions.append(pred)
-            sum_error += calculate_error(pred, classes[i])
-            self.backpropagation(features[i], classes, alpha)
-        sum_error /= len(features)
+
+            self.backpropagation(features[i], classes[i], alpha)
+
         return predictions
 
 

@@ -10,7 +10,7 @@ def train_network():
 
     neuralnetwork = NeuralNetwork([10, 8, 7])
 
-    lweight = 0.1
+    lweight = 0.01
     predictions = neuralnetwork.train(features, targets, lweight)
     file = open("Group_18_classes.txt", "w+")
     for i in range(len(predictions)):
