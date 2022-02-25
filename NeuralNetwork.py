@@ -3,9 +3,19 @@ import numpy as np
 from Perceptron import Perceptron
 
 
+# Initially, we can use the squared error function
+# it could be changed later on
 def calculate_error(prediction, actual):
-    return np.square(np.subtract(actual, prediction)).mean()
+    return np.square(np.subtract(actual, prediction))/2
 
+
+def sigmoid_derivative(output):
+    return output * (1 - output)
+
+def vectorize(target, size):
+    vector = np.zero(size)
+    vector[target-1] = 1
+    return vector
 
 class NeuralNetwork:
 
@@ -51,14 +61,50 @@ class NeuralNetwork:
 
         print(layer_inputs)
         # layer_inputs now how was results of the last layer of the network which is the predictions
-        # largest value should correspond to the index of the most likely output
+        # the largest value should correspond to the index of the most likely output
         prediction = layer_inputs.index(max(layer_inputs))
 
         return prediction
 
-    def backpropagation(self, features, classes, alpha ):
-        pass
+    def backpropagation(self, features, target, alpha):
 
-    # Initially, we can use the squared error function
-    # it could be changed later on
+        self.feedforward(features)
+        network_derivatives = []
+        actual = vectorize(target, len(self.network))
+
+        for l_index, layer in reverse(list(enumerate(self.network))):
+
+            layer_derivatives = []
+
+            previous_layer_results = map(lambda x: x.output, self.network[l_index-1])
+
+            for p_index, p in enumerate(self.network):
+
+                if l_index == (len(self.network)-1):
+                    derivative = sigmoid_derivative(p.z) * (p.output - actual[p_index])
+                    layer_derivatives.append(derivative)
+                else:
+
+                    weights_next_layer = self
+                    derivative = sigmoid_derivative(p.z) * p.output
+                p.weights = p.weights + alpha * derivative * previous_layer_results
+                p.bias = bias + alpha * derivative
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
