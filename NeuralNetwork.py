@@ -79,7 +79,7 @@ class NeuralNetwork:
             layer_derivatives = np.empty(len(self.network[l_index]))
 
             if l_index != 0:
-                previous_layer_results = map(lambda x: x.output, self.network[l_index-1])
+                previous_layer_results = list(map(lambda x: x.output, self.network[l_index-1]))
             else:
                 previous_layer_results = features
 
@@ -88,10 +88,10 @@ class NeuralNetwork:
                 if l_index == (len(self.network)-1):
                     derivative = sigmoid_derivative(p.z) * (p.output - actual[p_index])
                 else:
-                    next_layer_weights = list(map(lambda x: print(x.weights), self.network[l_index+1]))
-                    derivative = sigmoid_derivative(p.z) * np.dot(next_layer_weights, next_layer_derivatives[l_index+1])
-                print(p.weights, np.array(list(previous_layer_results)))
-                p.weights = p.weights + np.array(list(previous_layer_results))
+                    next_layer_weights = list(map(lambda x: x.weights[l_index], self.network[l_index+1]))
+                    derivative = sigmoid_derivative(p.z) * np.dot(next_layer_weights, next_layer_derivatives)
+
+                p.weights = p.weights + alpha * derivative * np.array(previous_layer_results)
                 p.bias = p.bias + alpha * derivative
                 layer_derivatives[p_index] = derivative
 
