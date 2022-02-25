@@ -15,7 +15,7 @@ def sigmoid_derivative(output):
 
 def vectorize(target, size):
     vector = np.zeros(size)
-    vector[target-1] = 1
+    vector[int(target)-1] = 1
     return vector
 
 
