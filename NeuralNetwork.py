@@ -97,6 +97,22 @@ class NeuralNetwork:
 
             next_layer_derivatives = np.array(layer_derivatives)
 
+    def train(self, features, classes, alpha):
+        predictions = []
+        sum_error = 0
+        for i in range(len(features)):
+            pred = self.feedforward(features[i])
+            predictions.append(pred)
+            sum_error += calculate_error(pred, classes[i])
+            self.backpropagation(features[i], classes, alpha)
+        sum_error /= len(features)
+        return predictions
+
+
+
+
+
+
 
 
 

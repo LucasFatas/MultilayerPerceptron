@@ -4,12 +4,17 @@ import numpy as np
 nn = NeuralNetwork([2, 3, 4])
 
 
-def network():
+def train_network():
     features = np.genfromtxt("data/features.txt", delimiter=",")
     targets = np.genfromtxt("data/targets.txt")
 
     neuralnetwork = NeuralNetwork([10, 8, 7])
-    for i in range(len(features)):
-        neuralnetwork.backpropagation(features[i], targets[i], 0.1)
 
-network()
+    lweight = 0.1
+    predictions = neuralnetwork.train(features, targets, lweight)
+    file = open("Group_18_classes.txt", "w+")
+    for i in range(len(predictions)):
+        file.write(str(predictions[i]) + ", ")
+    file.close()
+
+train_network()
