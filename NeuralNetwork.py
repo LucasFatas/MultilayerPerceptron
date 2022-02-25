@@ -12,10 +12,12 @@ def calculate_error(prediction, actual):
 def sigmoid_derivative(output):
     return output * (1 - output)
 
+
 def vectorize(target, size):
-    vector = np.zero(size)
+    vector = np.zeros(size)
     vector[target-1] = 1
     return vector
+
 
 class NeuralNetwork:
 
@@ -59,7 +61,7 @@ class NeuralNetwork:
 
             # Should maybe store results of each layer in perceptron since will be needed for backpropagation later
 
-        print(layer_inputs)
+
         # layer_inputs now how was results of the last layer of the network which is the predictions
         # the largest value should correspond to the index of the most likely output
         prediction = layer_inputs.index(max(layer_inputs))
@@ -69,26 +71,31 @@ class NeuralNetwork:
     def backpropagation(self, features, target, alpha):
 
         self.feedforward(features)
-        network_derivatives = []
-        actual = vectorize(target, len(self.network))
+        next_layer_derivatives = []
+        actual = vectorize(target, len(self.network[-1]))
 
-        for l_index, layer in reverse(list(enumerate(self.network))):
+        for l_index, layer in reversed(list(enumerate(self.network))):
 
-            layer_derivatives = []
+            layer_derivatives = np.empty(len(self.network[l_index]))
 
-            previous_layer_results = map(lambda x: x.output, self.network[l_index-1])
+            if l_index != 0:
+                previous_layer_results = map(lambda x: x.output, self.network[l_index-1])
+            else:
+                previous_layer_results = features
 
-            for p_index, p in enumerate(self.network):
+            for p_index, p in enumerate(layer):
 
                 if l_index == (len(self.network)-1):
                     derivative = sigmoid_derivative(p.z) * (p.output - actual[p_index])
-                    layer_derivatives.append(derivative)
                 else:
+                    next_layer_weights = list(map(lambda x: print(x.weights), self.network[l_index+1]))
+                    derivative = sigmoid_derivative(p.z) * np.dot(next_layer_weights, next_layer_derivatives[l_index+1])
+                print(p.weights, np.array(list(previous_layer_results)))
+                p.weights = p.weights + np.array(list(previous_layer_results))
+                p.bias = p.bias + alpha * derivative
+                layer_derivatives[p_index] = derivative
 
-                    weights_next_layer = self
-                    derivative = sigmoid_derivative(p.z) * p.output
-                p.weights = p.weights + alpha * derivative * previous_layer_results
-                p.bias = bias + alpha * derivative
+            next_layer_derivatives = np.array(layer_derivatives)
 
 
 
