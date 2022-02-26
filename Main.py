@@ -15,7 +15,7 @@ def train_network():
     features = np.genfromtxt("data/features.txt", delimiter=",")
     targets = np.genfromtxt("data/targets.txt")
 
-    neuralnetwork = NeuralNetwork([10, 7])
+    neuralnetwork = NeuralNetwork([10, 8, 7])
 
     lweight = 0.1
     predictions = neuralnetwork.train(features, targets, lweight)

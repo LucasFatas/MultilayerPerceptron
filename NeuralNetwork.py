@@ -55,10 +55,7 @@ class NeuralNetwork:
             layer_results = []
             for perceptron in layer:
                 layer_results.append(perceptron.calculate_output(layer_inputs))
-            # normalizes outputs
-            layer_results = layer_results / np.sum(layer_results)
-            for index, perceptron in enumerate(layer):
-                perceptron.output = layer_results[index]
+
             # layer_inputs gets replaced by results of this layer so that next layer can use them as inputs
             layer_inputs = layer_results
 
@@ -66,7 +63,9 @@ class NeuralNetwork:
 
         # layer_inputs now how was results of the last layer of the network which is the predictions
         # the largest value should correspond to the index of the most likely output
+        layer_inputs = layer_inputs / np.sum(layer_inputs)
         prediction = list(layer_inputs).index(max(layer_inputs)) + 1
+
 
         return prediction
 

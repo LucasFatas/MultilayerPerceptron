@@ -14,7 +14,8 @@ class Perceptron:
 
     def calculate_output(self, input):
         self.z = np.dot(input, self.weights) + self.bias
-        return self.activation_function(self.z)
+        self.output = self.activation_function(self.z)
+        return self.output
 
     def toString(self):
         print("Weights: " + str(self.weights))
