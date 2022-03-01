@@ -94,6 +94,12 @@ class NeuralNetwork:
                 p.bias = p.bias + alpha * p.derivative
 
     def train(self, features, classes, alpha):
-        for i in range(len(features)):
-            self.backpropagation(features[i], classes[i], alpha)
+        predictions = []
+        for i in range(6):
+            for j in range(len(features)):
+                pred = self.feedforward(features[j])
+                if i == 5:
+                    predictions.append(pred)
+                self.backpropagation(features[j], classes[j], alpha)
+        return predictions
 
