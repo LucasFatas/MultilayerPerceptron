@@ -2,26 +2,31 @@ from NeuralNetwork import NeuralNetwork
 import numpy as np
 import math
 
-features = [(0, 1), (1, 0), (1, 0), (0, 0), (0, 0), (1, 1), (0, 0), (1, 0), (1, 0), (0, 0), (1, 1), (1, 1), (1, 1)]
+features_train = [(0, 0), (1, 0), (0, 1), (1, 1)]
+features_test = [(0, 1), (1, 0), (1, 0), (0, 0), (0, 0), (1, 1), (0, 0), (1, 0), (1, 0), (0, 0), (1, 1), (1, 1), (1, 1), (1, 1), (0, 0), (0, 0), (0, 0)]
+
 
 def or_function():
-    targets = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1]
-    nn = NeuralNetwork([2, 2, 2])
-    nn.train(features, targets, 0.1)
-    print(outputAccuracyScore(nn, features, targets))
+    targets_train = [0, 1, 1, 1]
+    targets_test = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0]
+    nn1 = NeuralNetwork([2, 2, 2])
+    nn1.train(features_train, targets_train, 1, 10)
+    print(outputAccuracyScore(nn1, features_test, targets_test))
 
 
 def and_function():
-    targets = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1]
-    nn = NeuralNetwork([2, 2, 2])
-    nn.train(features, targets, 0.1)
-    print(outputAccuracyScore(nn, features, targets))
+    targets_train = [0, 0, 0, 1]
+    targets_test = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0]
+    nn2 = NeuralNetwork([2, 2, 2])
+    nn2.train(features_train, targets_train, 1, 10)
+    print(outputAccuracyScore(nn2, features_test, targets_test))
 
 def xor_function():
-    targets = [1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]
-    nn = NeuralNetwork([2, 2, 2])
-    nn.train(features, targets, 0.1)
-    print(outputAccuracyScore(nn, features, targets))
+    targets_train = [0, 1, 1, 0]
+    targets_test = [1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1]
+    nn3 = NeuralNetwork([2, 2, 2])
+    nn3.train(features_train, targets_train, 1, 10)
+    print(outputAccuracyScore(nn3, features_test, targets_test))
 
 
 def outputAccuracyScore(neuralnetwork, features, targets):
@@ -46,7 +51,7 @@ def crossvalidation(neuralnetwork ,training, target, k, alpha):
             validation_set = training[validation_begin:validation_end]
             training_target = np.delete(target, range(validation_begin, validation_end), 0)
             validation_target = target[validation_begin:validation_end]
-            neuralnetwork.train(training_set, training_target, alpha)
+            neuralnetwork.train(training_set, training_target, alpha, 1)
             error += outputAccuracyScore(neuralnetwork, validation_set, validation_target) / k
     return error / 10
 
@@ -60,18 +65,28 @@ def find_optimal_neuron_amount(training, target):
         result[neurons - 7] = error
     return result
 
-
+# this method creates a new neural network and then calls the train method in the NeuralNetwork to train it.
 def train_network():
     features = np.genfromtxt("data/features.txt", delimiter=",")
     targets = np.genfromtxt("data/targets.txt")
 
     neuralnetwork = NeuralNetwork([10, 8, 7])
-
+    # learning weight and the size of the neural network are hardcoded here
     lweight = 0.1
-    predictions = neuralnetwork.train(features, targets, lweight)
+    neuralnetwork.train(features, targets, lweight, 10)
     print(outputAccuracyScore(neuralnetwork, features, targets))
+    return neuralnetwork
 
-    #print(crossvalidation(neuralnetwork, features, targets, 20, lweight))
+or_function()
+and_function()
+xor_function()
+
+# takes a trained network and then writes the predictions of the unknown data set to the Group_18_classes.txt file
+def unknowns(network):
+    unknown = np.genfromtxt("data/unknown.txt", delimiter=",")
+    predictions = []
+    for i in range(len(unknown)):
+        predictions.append(network.feedforward(unknown[i]))
 
     file = open("Group_18_classes.txt", "w+")
     for i in range(len(predictions)):
@@ -81,7 +96,5 @@ def train_network():
             file.write(str(predictions[i]))
     file.close()
 
-#or_function()
-#and_function()
-#xor_function()
-train_network()
+# trains a new neural network and then feeds unknown.txt as input to it
+#unknowns(train_network())
