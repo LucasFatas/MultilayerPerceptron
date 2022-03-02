@@ -1,6 +1,11 @@
 from NeuralNetwork import NeuralNetwork
+from sklearn.metrics import confusion_matrix
 import numpy as np
 import math
+# these 2 imports are only used for the confusion matrix, not the neural network
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 features_train = [(0, 0), (1, 0), (0, 1), (1, 1)]
 features_test = [(0, 1), (1, 0), (1, 0), (0, 0), (0, 0), (1, 1), (0, 0), (1, 0), (1, 0), (0, 0), (1, 1), (1, 1), (1, 1), (1, 1), (0, 0), (0, 0), (0, 0)]
@@ -9,32 +14,36 @@ features_test = [(0, 1), (1, 0), (1, 0), (0, 0), (0, 0), (1, 1), (0, 0), (1, 0),
 def or_function():
     targets_train = [0, 1, 1, 1]
     targets_test = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0]
-    nn1 = NeuralNetwork([2, 2, 2])
-    nn1.train(features_train, targets_train, 1, 10)
+    nn1 = NeuralNetwork([2, 1, 2])
+    nn1.train(features_train, targets_train, 0.1, 500)
     print(outputAccuracyScore(nn1, features_test, targets_test))
 
 
 def and_function():
     targets_train = [0, 0, 0, 1]
     targets_test = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0]
-    nn2 = NeuralNetwork([2, 2, 2])
-    nn2.train(features_train, targets_train, 1, 10)
+    nn2 = NeuralNetwork([2, 1, 2])
+    nn2.train(features_train, targets_train, 0.1, 500)
     print(outputAccuracyScore(nn2, features_test, targets_test))
 
 def xor_function():
     targets_train = [0, 1, 1, 0]
     targets_test = [1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1]
-    nn3 = NeuralNetwork([2, 2, 2])
-    nn3.train(features_train, targets_train, 1, 10)
+    nn3 = NeuralNetwork([2, 1, 2])
+    nn3.train(features_train, targets_train, 0.1, 500)
     print(outputAccuracyScore(nn3, features_test, targets_test))
 
 
 def outputAccuracyScore(neuralnetwork, features, targets):
     totalCorrect = 0
+    predictions = []
     for j in range(len(targets)):
         prediction = neuralnetwork.feedforward(features[j])
         if prediction == targets[j]:
             totalCorrect += + 1
+        predictions.append(prediction)
+    # plot the confusion matrix of the test set
+    #plot_cf(predictions, targets)
     return totalCorrect / len(targets)
 
 
@@ -73,13 +82,21 @@ def train_network():
     neuralnetwork = NeuralNetwork([10, 8, 7])
     # learning weight and the size of the neural network are hardcoded here
     lweight = 0.1
-    neuralnetwork.train(features, targets, lweight, 10)
-    print(outputAccuracyScore(neuralnetwork, features, targets))
+
+    # split the data into a test set and a training set
+    training = features[:(len(features) // 10) * 8]
+    test = features[(len(features) // 10) * 8:]
+    training_targets = targets[:(len(targets) // 10) * 8]
+    test_targets = targets[(len(targets) // 10) * 8:]
+
+    neuralnetwork.train(training, training_targets, lweight, 5)
+    # print the accuracy score and plot the confusion matrix
+    print(outputAccuracyScore(neuralnetwork, test, test_targets))
     return neuralnetwork
 
-or_function()
-and_function()
-xor_function()
+#or_function()
+#and_function()
+#xor_function()
 
 # takes a trained network and then writes the predictions of the unknown data set to the Group_18_classes.txt file
 def unknowns(network):
@@ -96,5 +113,19 @@ def unknowns(network):
             file.write(str(predictions[i]))
     file.close()
 
+# method to plot the confusion matrix of the test set
+def plot_cf(predictions, actual):
+    cf = confusion_matrix(predictions, actual)
+    hp = sns.heatmap(cf, annot=True, cmap='Blues', fmt='g')
+
+    hp.set_title('Confusion Matrix Test Set Grocery Robot\n');
+    hp.set_xlabel('Predicted Category')
+    hp.set_ylabel('Actual Category ');
+    hp.xaxis.set_ticklabels(['1', '2', '3', '4', '5', '6', '7'])
+    hp.yaxis.set_ticklabels(['1', '2', '3', '4', '5', '6', '7'])
+
+    plt.show()
+
 # trains a new neural network and then feeds unknown.txt as input to it
-#unknowns(train_network())
+unknowns(train_network())
+

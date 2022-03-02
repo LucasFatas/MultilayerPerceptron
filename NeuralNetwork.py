@@ -94,12 +94,8 @@ class NeuralNetwork:
                 p.bias = p.bias + alpha * p.derivative
 
     def train(self, features, classes, alpha, epochs):
-        predictions = []
         for i in range(epochs):
             for j in range(len(features)):
                 pred = self.feedforward(features[j])
-                if i == epochs-1:
-                    predictions.append(pred)
                 self.backpropagation(features[j], classes[j], alpha)
-        return predictions
 
