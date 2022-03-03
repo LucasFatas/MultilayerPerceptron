@@ -55,27 +55,28 @@ def crossvalidation(neuralnetwork ,training, target, k, alpha):
         error = 0
         validation_end = 0
         for i in range(1, k+1):  # this is the cross-validation step
+            nn = neuralnetwork
             validation_begin = validation_end
             validation_end = validation_size * i
             training_set = np.delete(training, range(validation_begin, validation_end), 0)
             validation_set = training[validation_begin:validation_end]
             training_target = np.delete(target, range(validation_begin, validation_end), 0)
             validation_target = target[validation_begin:validation_end]
-            neuralnetwork.train(training_set, training_target, alpha, 1)
-            error += outputAccuracyScore(neuralnetwork, validation_set, validation_target) / k
+            nn.train(training_set, training_target, alpha, 3)
+            error += outputAccuracyScore(nn, validation_set, validation_target) / k
             print(error)
         result = result + error
     return result / 10
 
 def find_optimal_neuron_amount(training, target, k, alpha):
-    result = np.array([[7,0],[8,0],[10,0],[15,0],[25,0],[30,0]])
+    result = []
     index = 0
     for neurons in [7,8,10,15,25,30]:  # The amount of neurons is hardcoded for now
         nn = NeuralNetwork([10, neurons, 7])
         value = crossvalidation(nn, training, target, k, alpha)
-        result[index, 1] = value #This wont assign it for some reason so I just printed the values to do it by hand
+        result.append(value) #This wont assign it for some reason so I just printed the values to do it by hand
         index = index + 1
-        #print("\n",value)
+        print("\n",result)
     return result
 
 # this method creates a new neural network and then calls the train method in the NeuralNetwork to train it.
