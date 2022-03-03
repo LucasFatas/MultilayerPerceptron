@@ -87,15 +87,17 @@ def find_optimal_neuron_amount(training, target, k, alpha):
 
 
 # this method creates a new neural network and then calls the train method in the NeuralNetwork to train it.
-def train_network(training, target, k, alpha):
+def train_network(data, data_targets, hidden_neurons, lweight, epochs):
+    # create new neural network, hardcoded 1 hidden layer here.
+    neuralnetwork = NeuralNetwork([10, hidden_neurons, 7])
 
     # split the data into a test set and a training set
-    training = features[:(len(features) // 10) * 8]
-    test = features[(len(features) // 10) * 8:]
-    training_targets = targets[:(len(targets) // 10) * 8]
-    test_targets = targets[(len(targets) // 10) * 8:]
+    training = data[:(len(data) // 10) * 8]
+    test = data[(len(data) // 10) * 8:]
+    training_targets = data_targets[:(len(data_targets) // 10) * 8]
+    test_targets = data_targets[(len(data_targets) // 10) * 8:]
 
-    neuralnetwork.train(training, training_targets, alpha, 5)
+    neuralnetwork.train(training, training_targets, lweight, epochs)
     # print the accuracy score and plot the confusion matrix
     print(outputAccuracyScore(neuralnetwork, test, test_targets))
     return neuralnetwork
@@ -134,12 +136,15 @@ def plot_cf(predictions, actual):
     plt.show()
 
 
-features = np.genfromtxt("data/features.txt", delimiter=",")
-targets = np.genfromtxt("data/targets.txt")
-
-neuralnetwork = NeuralNetwork([10, 8, 7])
-# learning weight and the size of the neural network are hardcoded here
-alpha = 0.1
-# trains a new neural network and then feeds unknown.txt as input to it
-unknowns(train_network())
+# main method
+if __name__ == "__main__":
+    # fetch data from files
+    features = np.genfromtxt("data/features.txt", delimiter=",")
+    targets = np.genfromtxt("data/targets.txt")
+    # learning weight, amount of hidden neurons and amount of epochs are instantiated here
+    alpha = 0.1
+    neurons = 15
+    epoch = 5
+    # trains a new neural network and then feeds unknown.txt as input to it
+    unknowns(train_network(features, targets, neurons, alpha, epoch))
 

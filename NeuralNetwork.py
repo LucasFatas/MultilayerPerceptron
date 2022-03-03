@@ -96,6 +96,6 @@ class NeuralNetwork:
     def train(self, features, classes, alpha, epochs):
         for i in range(epochs):
             for j in range(len(features)):
-                pred = self.feedforward(features[j])
+                self.feedforward(features[j])
                 self.backpropagation(features[j], classes[j], alpha)
 
