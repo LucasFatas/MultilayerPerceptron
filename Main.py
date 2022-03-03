@@ -9,34 +9,7 @@ import seaborn as sns
 # The network is split into files: Perceptron.py and NeuralNetwork.py. The Perceptron.py has values related to the
 # neurons stored, contains the activation function and calculates the outputs for a single perceptron
 # The Neural Network contains the different layers of the network and has three main functions: initialise the network,
-# feedforward and backpropagation. In main we have ...
-#
-
-features_train = [(0, 0), (1, 0), (0, 1), (1, 1)]
-features_test = [(0, 1), (1, 0), (1, 0), (0, 0), (0, 0), (1, 1), (0, 0), (1, 0), (1, 0), (0, 0), (1, 1), (1, 1), (1, 1), (1, 1), (0, 0), (0, 0), (0, 0)]
-
-
-def or_function():
-    targets_train = [0, 1, 1, 1]
-    targets_test = [1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0]
-    nn1 = NeuralNetwork([2, 1, 2])
-    nn1.train(features_train, targets_train, 0.1, 500)
-    print(outputAccuracyScore(nn1, features_test, targets_test))
-
-
-def and_function():
-    targets_train = [0, 0, 0, 1]
-    targets_test = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0]
-    nn2 = NeuralNetwork([2, 1, 2])
-    nn2.train(features_train, targets_train, 0.1, 500)
-    print(outputAccuracyScore(nn2, features_test, targets_test))
-
-def xor_function():
-    targets_train = [0, 1, 1, 0]
-    targets_test = [1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1]
-    nn3 = NeuralNetwork([2, 1, 2])
-    nn3.train(features_train, targets_train, 0.1, 500)
-    print(outputAccuracyScore(nn3, features_test, targets_test))
+# feedforward and backpropagation. In main we have set up the methods for training the network and checking its results.
 
 
 def outputAccuracyScore(neuralnetwork, features, targets):
@@ -80,7 +53,7 @@ def find_optimal_neuron_amount(training, target, k, alpha):
     for neurons in [7,8,10,15,25,30]:  # The amount of neurons is hardcoded for now
         nn = NeuralNetwork([10, neurons, 7])
         value = crossvalidation(nn, training, target, k, alpha)
-        result.append(value) #This wont assign it for some reason so I just printed the values to do it by hand
+        result.append(value) # This wont assign it for some reason so I just printed the values to do it by hand
         index = index + 1
         print("\n",result)
     return result
@@ -102,9 +75,6 @@ def train_network(data, data_targets, hidden_neurons, lweight, epochs):
     print(outputAccuracyScore(neuralnetwork, test, test_targets))
     return neuralnetwork
 
-#or_function()
-#and_function()
-#xor_function()
 
 # takes a trained network and then writes the predictions of the unknown data set to the Group_18_classes.txt file
 def unknowns(network):
@@ -120,6 +90,7 @@ def unknowns(network):
         else:
             file.write(str(predictions[i]))
     file.close()
+
 
 # method to plot the confusion matrix of the test set
 def plot_cf(predictions, actual):
