@@ -147,3 +147,7 @@ if __name__ == "__main__":
     # trains a new neural network and then feeds unknown.txt as input to it
     unknowns(train_network(features, targets, neurons, alpha, epoch))
 
+    # how it would look to call the crossvalidation method
+    # crossvalidation(NeuralNetwork([10, neurons, 7]), features, targets, 10, alpha)
+    # how it would look to call the find_optimal_neuron_amount method
+    # find_optimal_neuron_amount(features, targets, 10, alpha)
