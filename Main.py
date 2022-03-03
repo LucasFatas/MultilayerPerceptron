@@ -6,6 +6,11 @@ import math
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# The network is split into files: Perceptron.py and NeuralNetwork.py. The Perceptron.py has values related to the
+# neurons stored, contains the activation function and calculates the outputs for a single perceptron
+# The Neural Network contains the different layers of the network and has three main functions: initialise the network,
+# feedforward and backpropagation. In main we have ...
+#
 
 features_train = [(0, 0), (1, 0), (0, 1), (1, 1)]
 features_test = [(0, 1), (1, 0), (1, 0), (0, 0), (0, 0), (1, 1), (0, 0), (1, 0), (1, 0), (0, 0), (1, 1), (1, 1), (1, 1), (1, 1), (0, 0), (0, 0), (0, 0)]
@@ -47,7 +52,7 @@ def outputAccuracyScore(neuralnetwork, features, targets):
     return totalCorrect / len(targets)
 
 
-def crossvalidation(neuralnetwork ,training, target, k, alpha):
+def crossvalidation(neuralnetwork, training, target, k, alpha):
     sample_size = len(training)
     validation_size = math.floor(sample_size / k)  # the k in k-crossvalidation
     result = 0
@@ -67,6 +72,7 @@ def crossvalidation(neuralnetwork ,training, target, k, alpha):
         result = result + error
     return result / 10
 
+
 def find_optimal_neuron_amount(training, target, k, alpha):
     result = np.array([[7,0],[8,0],[10,0],[15,0],[25,0],[30,0]])
     index = 0
@@ -78,14 +84,9 @@ def find_optimal_neuron_amount(training, target, k, alpha):
         #print("\n",value)
     return result
 
-# this method creates a new neural network and then calls the train method in the NeuralNetwork to train it.
-def train_network():
-    features = np.genfromtxt("data/features.txt", delimiter=",")
-    targets = np.genfromtxt("data/targets.txt")
 
-    neuralnetwork = NeuralNetwork([10, 8, 7])
-    # learning weight and the size of the neural network are hardcoded here
-    lweight = 0.1
+# this method creates a new neural network and then calls the train method in the NeuralNetwork to train it.
+def train_network(training, target, k, alpha):
 
     # split the data into a test set and a training set
     training = features[:(len(features) // 10) * 8]
@@ -93,7 +94,7 @@ def train_network():
     training_targets = targets[:(len(targets) // 10) * 8]
     test_targets = targets[(len(targets) // 10) * 8:]
 
-    neuralnetwork.train(training, training_targets, lweight, 5)
+    neuralnetwork.train(training, training_targets, alpha, 5)
     # print the accuracy score and plot the confusion matrix
     print(outputAccuracyScore(neuralnetwork, test, test_targets))
     return neuralnetwork
@@ -101,6 +102,7 @@ def train_network():
 #or_function()
 #and_function()
 #xor_function()
+
 
 # takes a trained network and then writes the predictions of the unknown data set to the Group_18_classes.txt file
 def unknowns(network):
@@ -130,6 +132,13 @@ def plot_cf(predictions, actual):
 
     plt.show()
 
+
+features = np.genfromtxt("data/features.txt", delimiter=",")
+targets = np.genfromtxt("data/targets.txt")
+
+neuralnetwork = NeuralNetwork([10, 8, 7])
+# learning weight and the size of the neural network are hardcoded here
+alpha = 0.1
 # trains a new neural network and then feeds unknown.txt as input to it
 unknowns(train_network())
 
