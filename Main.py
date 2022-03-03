@@ -106,7 +106,6 @@ def train_network(data, data_targets, hidden_neurons, lweight, epochs):
 #and_function()
 #xor_function()
 
-
 # takes a trained network and then writes the predictions of the unknown data set to the Group_18_classes.txt file
 def unknowns(network):
     unknown = np.genfromtxt("data/unknown.txt", delimiter=",")
@@ -143,7 +142,7 @@ if __name__ == "__main__":
     targets = np.genfromtxt("data/targets.txt")
     # learning weight, amount of hidden neurons and amount of epochs are instantiated here
     alpha = 0.1
-    neurons = 15
+    neurons = 25
     epoch = 5
     # trains a new neural network and then feeds unknown.txt as input to it
     unknowns(train_network(features, targets, neurons, alpha, epoch))
